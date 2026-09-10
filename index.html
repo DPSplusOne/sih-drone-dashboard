@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Aegis Nexus — Drone simulation, RF intelligence, and command-and-control dashboard."
+    />
+    <title>Aegis Nexus | Command Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+
+    <main class="shell">
+      <aside class="sidebar">
+        <a class="brand" href="#overview" aria-label="Aegis Nexus home">
+          <span class="brand-mark"><i></i><i></i><i></i><i></i></span>
+          <span>Aegis<span class="brand-light">Nexus</span></span>
+        </a>
+
+        <div class="workspace-switcher">
+          <span class="workspace-icon">⌁</span>
+          <span><small>Workspace</small><strong>SIH · Alpha Range</strong></span>
+          <span class="chevron">⌄</span>
+        </div>
+
+        <nav class="nav" aria-label="Main navigation">
+          <p>Command</p>
+          <a class="active" href="#overview"><span class="nav-icon">⌘</span>Overview</a>
+          <a href="#missions"><span class="nav-icon">◈</span>Mission simulator</a>
+          <a href="#rf-lab"><span class="nav-icon">⌁</span>RF signal lab</a>
+          <p>Intelligence</p>
+          <a href="#models"><span class="nav-icon">◌</span>AI models <b>2</b></a>
+          <a href="#validation"><span class="nav-icon">✓</span>Validation</a>
+          <a href="#datasets"><span class="nav-icon">▤</span>Datasets</a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="secure-status"><span></span>Secure uplink</div>
+          <button class="profile-button" type="button">
+            <span class="avatar">AR</span>
+            <span><strong>Arjun Rao</strong><small>Mission control</small></span>
+            <span class="more">•••</span>
+          </button>
+        </div>
+      </aside>
+
+      <section class="content" id="overview">
+        <header class="topbar">
+          <div class="breadcrumb"><span>Command center</span><i>/</i><strong>Live operations</strong></div>
+          <div class="top-actions">
+            <button class="icon-button" type="button" aria-label="View notifications">
+              <span class="bell">♧</span><em></em>
+            </button>
+            <button class="help-button" type="button" aria-label="Open help">?</button>
+            <span class="header-avatar">AR</span>
+          </div>
+        </header>
+
+        <div class="page-heading">
+          <div>
+            <div class="eyebrow"><span></span>Simulation environment synced</div>
+            <h1>Good evening, Arjun.</h1>
+            <p>Here’s how your airspace is performing today.</p>
+          </div>
+          <button class="primary-button" id="new-mission" type="button"><span>＋</span> New mission</button>
+        </div>
+
+        <section class="metric-grid" aria-label="Operational metrics">
+          <article class="metric-card">
+            <div class="metric-icon blue">✦</div>
+            <div><p>Active simulations</p><h2>08</h2><small><span class="up">↑ 14%</span> vs. last session</small></div>
+            <div class="metric-graphic signal-bars"><i></i><i></i><i></i><i></i><i></i></div>
+          </article>
+          <article class="metric-card">
+            <div class="metric-icon violet">⌁</div>
+            <div><p>RF signals captured</p><h2>24.8k</h2><small><span class="up">↑ 8.2%</span> today</small></div>
+            <div class="metric-graphic line-graphic"><svg viewBox="0 0 100 42" preserveAspectRatio="none" aria-hidden="true"><path d="M0 33 C8 32, 9 18, 18 25 S28 10, 37 19 S47 28, 56 13 S69 21, 77 10 S87 18, 100 2" /></svg></div>
+          </article>
+          <article class="metric-card">
+            <div class="metric-icon amber">◎</div>
+            <div><p>Model confidence</p><h2>96.4%</h2><small><span class="up">↑ 1.8%</span> validated accuracy</small></div>
+            <div class="metric-graphic ring"><span>96</span></div>
+          </article>
+          <article class="metric-card">
+            <div class="metric-icon mint">◇</div>
+            <div><p>Coverage area</p><h2>42.6 <small>km²</small></h2><small><span class="up">↑ 3.1%</span> mission radius</small></div>
+            <div class="metric-graphic radar"><i></i><i></i><b></b></div>
+          </article>
+        </section>
+
+        <section class="operations-grid">
+          <article class="panel map-panel" id="missions">
+            <div class="panel-header">
+              <div><p class="panel-kicker">Live airspace</p><h2>Alpha Range · Sector 04</h2></div>
+              <div class="segmented-control" aria-label="Map mode">
+                <button class="selected" type="button">Map</button><button type="button">Terrain</button>
+              </div>
+            </div>
+            <div class="map-canvas">
+              <div class="map-grid"></div>
+              <div class="contour contour-one"></div><div class="contour contour-two"></div><div class="contour contour-three"></div>
+              <div class="zone zone-a"><span>INSPECTION ZONE</span></div>
+              <div class="zone zone-b"><span>RESTRICTED</span></div>
+              <div class="route route-one"><i></i><i></i><i></i></div>
+              <div class="route route-two"><i></i><i></i></div>
+              <div class="home-marker"><span>⌖</span><b>BASE</b></div>
+              <button class="drone-pin drone-one" type="button" data-drone="UAV-07"><span>✦</span><b>UAV-07</b></button>
+              <button class="drone-pin drone-two" type="button" data-drone="UAV-12"><span>✦</span><b>UAV-12</b></button>
+              <button class="drone-pin drone-three" type="button" data-drone="UAV-03"><span>✦</span><b>UAV-03</b></button>
+              <div class="map-scale"><i></i><span>200 m</span></div>
+              <div class="map-legend"><span><i class="legend-flight"></i>Active flight</span><span><i class="legend-zone"></i>Geo-fence</span></div>
+              <div class="map-hud"><span class="pulse"></span><span id="selected-drone">UAV-07</span><small>Telemetry live</small></div>
+            </div>
+            <div class="map-panel-footer">
+              <span><i class="live-dot"></i>4 aircraft in airspace</span>
+              <button type="button" id="center-map">Center on operation <span>→</span></button>
+            </div>
+          </article>
+
+          <article class="panel flight-panel">
+            <div class="panel-header compact"><div><p class="panel-kicker">Mission status</p><h2>Flight telemetry</h2></div><button class="dots" type="button">•••</button></div>
+            <div class="selected-flight">
+              <div class="aircraft-icon">✦</div>
+              <div><strong id="flight-label">UAV-07 · Surveyor</strong><span><i class="live-dot"></i> In flight</span></div>
+              <button type="button" class="open-arrow">↗</button>
+            </div>
+            <div class="telemetry-list">
+              <div><span>Altitude</span><strong>124 <small>m</small></strong><i><b style="width:71%"></b></i></div>
+              <div><span>Ground speed</span><strong>38.2 <small>km/h</small></strong><i><b style="width:62%"></b></i></div>
+              <div><span>Battery</span><strong class="battery-value">78<small>%</small></strong><i class="battery"><b style="width:78%"></b></i></div>
+              <div><span>Signal strength</span><strong>−63 <small>dBm</small></strong><i><b style="width:54%"></b></i></div>
+            </div>
+            <div class="flight-footer"><span>Mission progress</span><strong>68%</strong><i><b></b></i><small>ETA 08:42 min</small></div>
+          </article>
+        </section>
+
+        <section class="lower-grid">
+          <article class="panel rf-panel" id="rf-lab">
+            <div class="panel-header compact"><div><p class="panel-kicker">RF intelligence</p><h2>Signal activity</h2></div><button class="text-button" type="button">View lab <span>→</span></button></div>
+            <div class="chart-wrap">
+              <div class="chart-labels"><span>−40</span><span>−60</span><span>−80</span><span>−100</span></div>
+              <svg class="rf-chart" viewBox="0 0 760 210" preserveAspectRatio="none" aria-label="RF signal activity chart">
+                <defs><linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5d68f5" stop-opacity=".34" /><stop offset="100%" stop-color="#5d68f5" stop-opacity="0" /></linearGradient></defs>
+                <g class="chart-guides"><path d="M0 18H760M0 74H760M0 130H760M0 186H760"/></g>
+                <path class="chart-area" d="M0 173 C16 170 22 156 34 165 S53 124 69 139 S90 124 103 145 S124 105 140 122 S154 96 166 120 S184 141 199 132 S217 151 231 130 S244 120 257 145 S275 102 290 109 S310 90 326 121 S343 141 359 127 S379 110 394 131 S412 128 427 144 S445 114 459 119 S481 84 495 104 S515 68 529 94 S550 114 566 101 S582 128 597 115 S616 74 631 88 S650 63 665 78 S685 105 699 91 S722 65 736 74 S748 53 760 57 V210 H0Z" />
+                <path class="chart-line" d="M0 173 C16 170 22 156 34 165 S53 124 69 139 S90 124 103 145 S124 105 140 122 S154 96 166 120 S184 141 199 132 S217 151 231 130 S244 120 257 145 S275 102 290 109 S310 90 326 121 S343 141 359 127 S379 110 394 131 S412 128 427 144 S445 114 459 119 S481 84 495 104 S515 68 529 94 S550 114 566 101 S582 128 597 115 S616 74 631 88 S650 63 665 78 S685 105 699 91 S722 65 736 74 S748 53 760 57" />
+                <circle cx="529" cy="94" r="5" class="chart-point"/><circle cx="665" cy="78" r="5" class="chart-point"/>
+              </svg>
+              <div class="chart-x"><span>08:00</span><span>09:00</span><span>10:00</span><span>11:00</span><span>12:00</span><span>13:00</span></div>
+            </div>
+            <div class="signal-summary"><span><i></i>2.4 GHz band</span><span><strong>+18.4%</strong> signal density</span><span><b>8</b> classified anomalies</span></div>
+          </article>
+
+          <article class="panel model-panel" id="models">
+            <div class="panel-header compact"><div><p class="panel-kicker">Synthetic intelligence</p><h2>Model readiness</h2></div><button class="dots" type="button">•••</button></div>
+            <div class="model-score"><div class="score-ring"><span>96<small>.4%</small></span></div><div><strong>Drone signature<br />classifier</strong><p>Ready for C2 deployment</p></div></div>
+            <div class="model-metrics"><span><small>Precision</small><b>97.1%</b></span><span><small>Recall</small><b>95.8%</b></span><span><small>F1 score</small><b>96.4%</b></span></div>
+            <button class="deploy-button" id="deploy-model" type="button">Deploy to command center <span>→</span></button>
+          </article>
+
+          <article class="panel validation-panel" id="validation">
+            <div class="panel-header compact"><div><p class="panel-kicker">Scientific validation</p><h2>Simulation fidelity</h2></div><span class="verified">✓ Validated</span></div>
+            <div class="fidelity-number"><strong>92.8</strong><span>/ 100</span><small>Fidelity score</small></div>
+            <div class="fidelity-bars"><div><span>Trajectory dynamics</span><i><b style="width:94%"></b></i><strong>94</strong></div><div><span>RF propagation</span><i><b style="width:91%"></b></i><strong>91</strong></div><div><span>Telemetry distribution</span><i><b style="width:93%"></b></i><strong>93</strong></div></div>
+            <p class="validation-note">Calibrated against held-out PX4 &amp; MAVLink reference logs.</p>
+          </article>
+        </section>
+
+        <section class="pipeline-panel" id="datasets">
+          <div><p class="panel-kicker">Integrated platform flow</p><h2>From digital twin to assured decisions.</h2></div>
+          <div class="pipeline">
+            <span class="pipeline-step"><i>01</i><b>Digital twin</b><small>Virtual environment</small></span><em>→</em>
+            <span class="pipeline-step"><i>02</i><b>Flight simulation</b><small>Mission trajectories</small></span><em>→</em>
+            <span class="pipeline-step"><i>03</i><b>RF synthesis</b><small>Labeled datasets</small></span><em>→</em>
+            <span class="pipeline-step"><i>04</i><b>AI training</b><small>Detection models</small></span><em>→</em>
+            <span class="pipeline-step accent"><i>05</i><b>C2 deployment</b><small>Validated operations</small></span>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"><span>✓</span><p><strong id="toast-title">Mission created</strong><small id="toast-copy">Draft mission is ready to configure.</small></p></div>
+    <script src="app.js"></script>
+  </body>
+</html>
