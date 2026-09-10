@@ -10,9 +10,6 @@ The dashboard represents the project workflow in the supplied brief:
 4. AI model training and command-and-control deployment
 5. Scientific validation against reference telemetry
 
-## Run locally
-
-This is a zero-build static frontend. Open `index.html` in a browser, or serve the folder using any static file server.
 
 ## Included interactions
 
