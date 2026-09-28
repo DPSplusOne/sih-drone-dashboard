@@ -22,3 +22,5 @@ The dashboard represents the project workflow in the supplied brief:
 Hello world
 
 Hello world, says luna
+
+First merge conflict, luna
