@@ -24,3 +24,4 @@ Hello world
 Hello world, says luna
 
 First merge conflict, luna
+Good day, rain
