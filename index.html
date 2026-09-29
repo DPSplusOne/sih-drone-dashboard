@@ -3,193 +3,76 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Aegis Nexus — Drone simulation, RF intelligence, and command-and-control dashboard."
-    />
-    <title>Aegis Nexus | Command Center</title>
+    <meta name="description" content="AeroTrace 3D turns a single-pass drone video into a validated, georeferenced 3D reconstruction." />
+    <title>AeroTrace 3D | Reconstruction Console</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="ambient ambient-one"></div>
-    <div class="ambient ambient-two"></div>
-
-    <main class="shell">
+    <div class="glow glow-one"></div><div class="glow glow-two"></div>
+    <main class="app-shell">
       <aside class="sidebar">
-        <a class="brand" href="#overview" aria-label="Aegis Nexus home">
-          <span class="brand-mark"><i></i><i></i><i></i><i></i></span>
-          <span>Aegis<span class="brand-light">Nexus</span></span>
-        </a>
-
-        <div class="workspace-switcher">
-          <span class="workspace-icon">⌁</span>
-          <span><small>Workspace</small><strong>SIH · Alpha Range</strong></span>
-          <span class="chevron">⌄</span>
-        </div>
-
-        <nav class="nav" aria-label="Main navigation">
-          <p>Command</p>
-          <a class="active" href="#overview"><span class="nav-icon">⌘</span>Overview</a>
-          <a href="#missions"><span class="nav-icon">◈</span>Mission simulator</a>
-          <a href="#rf-lab"><span class="nav-icon">⌁</span>RF signal lab</a>
-          <p>Intelligence</p>
-          <a href="#models"><span class="nav-icon">◌</span>AI models <b>2</b></a>
-          <a href="#validation"><span class="nav-icon">✓</span>Validation</a>
-          <a href="#datasets"><span class="nav-icon">▤</span>Datasets</a>
+        <a class="brand" href="#workspace" aria-label="AeroTrace 3D home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>AeroTrace <b>3D</b></span></a>
+        <div class="project-switcher"><span class="project-icon">AT</span><span><small>Active reconstruction</small><strong>Heritage Block 07</strong></span><span class="chevron">&#8964;</span></div>
+        <nav class="nav" aria-label="Project sections">
+          <p>Reconstruction</p>
+          <a class="active" href="#workspace"><span>01</span>Workspace</a><a href="#ingest"><span>02</span>Input &amp; quality</a><a href="#pipeline"><span>03</span>Pipeline <b id="pipeline-count">4/5</b></a><a href="#viewer"><span>04</span>3D model viewer</a>
+          <p>Assurance</p><a href="#validation"><span>05</span>Validation</a><a href="#deliverables"><span>06</span>Exports</a>
         </nav>
-
-        <div class="sidebar-footer">
-          <div class="secure-status"><span></span>Secure uplink</div>
-          <button class="profile-button" type="button">
-            <span class="avatar">AR</span>
-            <span><strong>Arjun Rao</strong><small>Mission control</small></span>
-            <span class="more">•••</span>
-          </button>
-        </div>
+        <div class="sidebar-footer"><div class="secure-status"><i></i>Local processing profile</div><div class="role-note"><strong>SIH26158</strong><small>Single-pass video to accurate 3D</small></div></div>
       </aside>
-
-      <section class="content" id="overview">
-        <header class="topbar">
-          <div class="breadcrumb"><span>Command center</span><i>/</i><strong>Live operations</strong></div>
-          <div class="top-actions">
-            <button class="icon-button" type="button" aria-label="View notifications">
-              <span class="bell">♧</span><em></em>
-            </button>
-            <button class="help-button" type="button" aria-label="Open help">?</button>
-            <span class="header-avatar">AR</span>
-          </div>
-        </header>
-
-        <div class="page-heading">
-          <div>
-            <div class="eyebrow"><span></span>Simulation environment synced</div>
-            <h1>Good evening, Arjun.</h1>
-            <p>Here’s how your airspace is performing today.</p>
-          </div>
-          <button class="primary-button" id="new-mission" type="button"><span>＋</span> New mission</button>
-        </div>
-
-        <section class="metric-grid" aria-label="Operational metrics">
-          <article class="metric-card">
-            <div class="metric-icon blue">✦</div>
-            <div><p>Active simulations</p><h2>08</h2><small><span class="up">↑ 14%</span> vs. last session</small></div>
-            <div class="metric-graphic signal-bars"><i></i><i></i><i></i><i></i><i></i></div>
+      <section class="content" id="workspace">
+        <header class="topbar"><div class="breadcrumb"><span>Projects</span><i>/</i><strong>Heritage Block 07</strong><em>Draft</em></div><div class="top-actions"><button class="plain-button" id="open-plan" type="button">View build plan</button><button class="avatar" type="button" aria-label="Account menu">AP</button></div></header>
+        <section class="intro">
+          <div><p class="eyebrow"><i></i>Single-pass reconstruction workspace</p><h1>Turn one drone pass into evidence you can measure.</h1><p class="lede">A georeferenced reconstruction pipeline for 1080p/4K video, GPS, and flight metadata. Optional IMU, camera calibration, and RTK data improve confidence.</p></div>
+          <button class="primary-button" id="start-reconstruction" type="button"><span>&#9654;</span> Start reconstruction</button>
+        </section>
+        <section class="summary-grid" aria-label="Reconstruction summary">
+          <article class="summary-card"><span class="summary-icon violet">&#9656;</span><div><p>Video input</p><strong id="video-summary">04:18 <small>min</small></strong><small>4K · 30 fps · H.265</small></div></article>
+          <article class="summary-card"><span class="summary-icon blue">&#9673;</span><div><p>Usable frames</p><strong id="frames-summary">1,248</strong><small><b>83%</b> accepted after quality gates</small></div></article>
+          <article class="summary-card"><span class="summary-icon mint">&#8853;</span><div><p>Geo confidence</p><strong>0.94</strong><small><b>RTK</b> + camera model fused</small></div></article>
+          <article class="summary-card"><span class="summary-icon amber">&#10003;</span><div><p>Model coverage</p><strong id="coverage-summary">91.6<small>%</small></strong><small>Visible surfaces reconstructed</small></div></article>
+        </section>
+        <section class="work-grid">
+          <article class="panel ingest-panel" id="ingest">
+            <div class="panel-heading"><div><p class="kicker">01 · Video processing</p><h2>Mission inputs &amp; frame quality</h2></div><span class="status-chip ready">Ready</span></div>
+            <div class="input-layout">
+              <label class="upload-zone" id="upload-zone" for="video-file"><input id="video-file" type="file" accept="video/*" hidden /><span class="upload-icon">&#8679;</span><strong id="upload-title">Drone video attached</strong><small id="upload-copy">HB07_single_pass_4k.mp4 · 2.8 GB</small><span class="replace-file">Replace video</span></label>
+              <div class="input-details"><div class="metadata-head"><span>Sensor package</span><button id="metadata-toggle" type="button" aria-expanded="false">Show details</button></div><dl><div><dt>GPS track</dt><dd><i></i>Attached · 812 fixes</dd></div><div><dt>Flight metadata</dt><dd><i></i>Attached · SRT packet</dd></div><div><dt>IMU / RTK</dt><dd><i></i>Attached · PPK corrected</dd></div><div class="optional-meta"><dt>Camera intrinsics</dt><dd>24 mm equiv. · calibrated</dd></div></dl></div>
+            </div>
+            <div class="quality-row"><div><span>Blur rejection</span><strong>136 frames</strong></div><div><span>Dynamic-object mask</span><strong>Vehicles + pedestrians</strong></div><div><span>Lighting stability</span><strong class="pass">Pass</strong></div></div>
           </article>
-          <article class="metric-card">
-            <div class="metric-icon violet">⌁</div>
-            <div><p>RF signals captured</p><h2>24.8k</h2><small><span class="up">↑ 8.2%</span> today</small></div>
-            <div class="metric-graphic line-graphic"><svg viewBox="0 0 100 42" preserveAspectRatio="none" aria-hidden="true"><path d="M0 33 C8 32, 9 18, 18 25 S28 10, 37 19 S47 28, 56 13 S69 21, 77 10 S87 18, 100 2" /></svg></div>
-          </article>
-          <article class="metric-card">
-            <div class="metric-icon amber">◎</div>
-            <div><p>Model confidence</p><h2>96.4%</h2><small><span class="up">↑ 1.8%</span> validated accuracy</small></div>
-            <div class="metric-graphic ring"><span>96</span></div>
-          </article>
-          <article class="metric-card">
-            <div class="metric-icon mint">◇</div>
-            <div><p>Coverage area</p><h2>42.6 <small>km²</small></h2><small><span class="up">↑ 3.1%</span> mission radius</small></div>
-            <div class="metric-graphic radar"><i></i><i></i><b></b></div>
+          <article class="panel mission-panel">
+            <div class="panel-heading compact"><div><p class="kicker">Flight trace</p><h2>Capture geometry</h2></div><span class="gps-label">GPS LOCK</span></div>
+            <div class="trace-map" aria-label="Flight track over capture area"><div class="map-lines"></div><div class="building b-one"></div><div class="building b-two"></div><div class="building b-three"></div><svg viewBox="0 0 340 180" role="img" aria-label="Single-pass flight route"><path class="route-shadow" d="M30 151 C68 121 81 115 116 98 S178 74 203 62 S260 52 307 22" /><path class="route-line" d="M30 151 C68 121 81 115 116 98 S178 74 203 62 S260 52 307 22" /><circle cx="30" cy="151" r="7" class="route-start"/><circle cx="307" cy="22" r="7" class="route-end"/><circle cx="116" cy="98" r="3"/><circle cx="203" cy="62" r="3"/><circle cx="260" cy="52" r="3"/></svg><span class="start-label">START</span><span class="end-label">END</span><div class="route-caption"><b>426 m</b><span>single flight path</span></div></div>
+            <div class="mission-stats"><span><small>Mean altitude</small><b>74.2 m</b></span><span><small>Overlap</small><b>71%</b></span><span><small>GPS RMSE</small><b>0.18 m</b></span></div>
           </article>
         </section>
-
-        <section class="operations-grid">
-          <article class="panel map-panel" id="missions">
-            <div class="panel-header">
-              <div><p class="panel-kicker">Live airspace</p><h2>Alpha Range · Sector 04</h2></div>
-              <div class="segmented-control" aria-label="Map mode">
-                <button class="selected" type="button">Map</button><button type="button">Terrain</button>
-              </div>
-            </div>
-            <div class="map-canvas">
-              <div class="map-grid"></div>
-              <div class="contour contour-one"></div><div class="contour contour-two"></div><div class="contour contour-three"></div>
-              <div class="zone zone-a"><span>INSPECTION ZONE</span></div>
-              <div class="zone zone-b"><span>RESTRICTED</span></div>
-              <div class="route route-one"><i></i><i></i><i></i></div>
-              <div class="route route-two"><i></i><i></i></div>
-              <div class="home-marker"><span>⌖</span><b>BASE</b></div>
-              <button class="drone-pin drone-one" type="button" data-drone="UAV-07"><span>✦</span><b>UAV-07</b></button>
-              <button class="drone-pin drone-two" type="button" data-drone="UAV-12"><span>✦</span><b>UAV-12</b></button>
-              <button class="drone-pin drone-three" type="button" data-drone="UAV-03"><span>✦</span><b>UAV-03</b></button>
-              <div class="map-scale"><i></i><span>200 m</span></div>
-              <div class="map-legend"><span><i class="legend-flight"></i>Active flight</span><span><i class="legend-zone"></i>Geo-fence</span></div>
-              <div class="map-hud"><span class="pulse"></span><span id="selected-drone">UAV-07</span><small>Telemetry live</small></div>
-            </div>
-            <div class="map-panel-footer">
-              <span><i class="live-dot"></i>4 aircraft in airspace</span>
-              <button type="button" id="center-map">Center on operation <span>→</span></button>
-            </div>
-          </article>
-
-          <article class="panel flight-panel">
-            <div class="panel-header compact"><div><p class="panel-kicker">Mission status</p><h2>Flight telemetry</h2></div><button class="dots" type="button">•••</button></div>
-            <div class="selected-flight">
-              <div class="aircraft-icon">✦</div>
-              <div><strong id="flight-label">UAV-07 · Surveyor</strong><span><i class="live-dot"></i> In flight</span></div>
-              <button type="button" class="open-arrow">↗</button>
-            </div>
-            <div class="telemetry-list">
-              <div><span>Altitude</span><strong>124 <small>m</small></strong><i><b style="width:71%"></b></i></div>
-              <div><span>Ground speed</span><strong>38.2 <small>km/h</small></strong><i><b style="width:62%"></b></i></div>
-              <div><span>Battery</span><strong class="battery-value">78<small>%</small></strong><i class="battery"><b style="width:78%"></b></i></div>
-              <div><span>Signal strength</span><strong>−63 <small>dBm</small></strong><i><b style="width:54%"></b></i></div>
-            </div>
-            <div class="flight-footer"><span>Mission progress</span><strong>68%</strong><i><b></b></i><small>ETA 08:42 min</small></div>
-          </article>
-        </section>
-
-        <section class="lower-grid">
-          <article class="panel rf-panel" id="rf-lab">
-            <div class="panel-header compact"><div><p class="panel-kicker">RF intelligence</p><h2>Signal activity</h2></div><button class="text-button" type="button">View lab <span>→</span></button></div>
-            <div class="chart-wrap">
-              <div class="chart-labels"><span>−40</span><span>−60</span><span>−80</span><span>−100</span></div>
-              <svg class="rf-chart" viewBox="0 0 760 210" preserveAspectRatio="none" aria-label="RF signal activity chart">
-                <defs><linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5d68f5" stop-opacity=".34" /><stop offset="100%" stop-color="#5d68f5" stop-opacity="0" /></linearGradient></defs>
-                <g class="chart-guides"><path d="M0 18H760M0 74H760M0 130H760M0 186H760"/></g>
-                <path class="chart-area" d="M0 173 C16 170 22 156 34 165 S53 124 69 139 S90 124 103 145 S124 105 140 122 S154 96 166 120 S184 141 199 132 S217 151 231 130 S244 120 257 145 S275 102 290 109 S310 90 326 121 S343 141 359 127 S379 110 394 131 S412 128 427 144 S445 114 459 119 S481 84 495 104 S515 68 529 94 S550 114 566 101 S582 128 597 115 S616 74 631 88 S650 63 665 78 S685 105 699 91 S722 65 736 74 S748 53 760 57 V210 H0Z" />
-                <path class="chart-line" d="M0 173 C16 170 22 156 34 165 S53 124 69 139 S90 124 103 145 S124 105 140 122 S154 96 166 120 S184 141 199 132 S217 151 231 130 S244 120 257 145 S275 102 290 109 S310 90 326 121 S343 141 359 127 S379 110 394 131 S412 128 427 144 S445 114 459 119 S481 84 495 104 S515 68 529 94 S550 114 566 101 S582 128 597 115 S616 74 631 88 S650 63 665 78 S685 105 699 91 S722 65 736 74 S748 53 760 57" />
-                <circle cx="529" cy="94" r="5" class="chart-point"/><circle cx="665" cy="78" r="5" class="chart-point"/>
-              </svg>
-              <div class="chart-x"><span>08:00</span><span>09:00</span><span>10:00</span><span>11:00</span><span>12:00</span><span>13:00</span></div>
-            </div>
-            <div class="signal-summary"><span><i></i>2.4 GHz band</span><span><strong>+18.4%</strong> signal density</span><span><b>8</b> classified anomalies</span></div>
-          </article>
-
-          <article class="panel model-panel" id="models">
-            <div class="panel-header compact"><div><p class="panel-kicker">Synthetic intelligence</p><h2>Model readiness</h2></div><button class="dots" type="button">•••</button></div>
-            <div class="model-score"><div class="score-ring"><span>96<small>.4%</small></span></div><div><strong>Drone signature<br />classifier</strong><p>Ready for C2 deployment</p></div></div>
-            <div class="model-metrics"><span><small>Precision</small><b>97.1%</b></span><span><small>Recall</small><b>95.8%</b></span><span><small>F1 score</small><b>96.4%</b></span></div>
-            <button class="deploy-button" id="deploy-model" type="button">Deploy to command center <span>→</span></button>
-          </article>
-
-          <article class="panel validation-panel" id="validation">
-            <div class="panel-header compact"><div><p class="panel-kicker">Scientific validation</p><h2>Simulation fidelity</h2></div><span class="verified">✓ Validated</span></div>
-            <div class="fidelity-number"><strong>92.8</strong><span>/ 100</span><small>Fidelity score</small></div>
-            <div class="fidelity-bars"><div><span>Trajectory dynamics</span><i><b style="width:94%"></b></i><strong>94</strong></div><div><span>RF propagation</span><i><b style="width:91%"></b></i><strong>91</strong></div><div><span>Telemetry distribution</span><i><b style="width:93%"></b></i><strong>93</strong></div></div>
-            <p class="validation-note">Calibrated against held-out PX4 &amp; MAVLink reference logs.</p>
-          </article>
-        </section>
-
-        <section class="pipeline-panel" id="datasets">
-          <div><p class="panel-kicker">Integrated platform flow</p><h2>From digital twin to assured decisions.</h2></div>
-          <div class="pipeline">
-            <span class="pipeline-step"><i>01</i><b>Digital twin</b><small>Virtual environment</small></span><em>→</em>
-            <span class="pipeline-step"><i>02</i><b>Flight simulation</b><small>Mission trajectories</small></span><em>→</em>
-            <span class="pipeline-step"><i>03</i><b>RF synthesis</b><small>Labeled datasets</small></span><em>→</em>
-            <span class="pipeline-step"><i>04</i><b>AI training</b><small>Detection models</small></span><em>→</em>
-            <span class="pipeline-step accent"><i>05</i><b>C2 deployment</b><small>Validated operations</small></span>
+        <section class="pipeline-section" id="pipeline">
+          <div class="section-heading"><div><p class="kicker">02–04 · Processing chain</p><h2>Reconstruction pipeline</h2></div><span id="pipeline-status">4 of 5 stages completed</span></div>
+          <div class="pipeline-track">
+            <article class="stage complete"><span class="stage-number">01</span><div><strong>Frame conditioning</strong><small>Stabilize, deblur, select keyframes</small></div><i>&#10003;</i></article><article class="stage complete"><span class="stage-number">02</span><div><strong>Pose &amp; georeferencing</strong><small>Visual odometry, BA, GPS/IMU fusion</small></div><i>&#10003;</i></article><article class="stage complete"><span class="stage-number">03</span><div><strong>Depth &amp; feature fusion</strong><small>Depth priors, matching, dense cloud</small></div><i>&#10003;</i></article><article class="stage complete"><span class="stage-number">04</span><div><strong>Mesh refinement</strong><small>Occlusion completion, dynamic filtering</small></div><i>&#10003;</i></article><article class="stage active" id="final-stage"><span class="stage-number">05</span><div><strong>Texture &amp; validate</strong><small id="final-stage-copy">Atlas, metrics, publishable outputs</small></div><i class="spinner"></i></article>
           </div>
         </section>
+        <section class="viewer-grid" id="viewer">
+          <article class="panel model-viewer">
+            <div class="panel-heading compact"><div><p class="kicker">05 · Reconstruction output</p><h2>Georeferenced model</h2></div><div class="view-controls" aria-label="Model display mode"><button class="selected" type="button" data-view="mesh">Mesh</button><button type="button" data-view="points">Points</button></div></div>
+            <div class="viewer-canvas" id="viewer-canvas" aria-label="Interactive reconstruction preview"><div class="viewer-gridlines"></div><svg class="model-art" viewBox="0 0 700 330" role="img" aria-label="Textured building and terrain model preview"><g class="terrain"><path d="M20 270 140 191 282 225 420 162 675 238 675 330 20 330Z"/><path d="M20 270 174 286 282 225 425 277 675 238"/></g><g class="model-building"><path class="roof" d="m242 110 157-62 174 68-161 73z"/><path class="front" d="m242 110 170 79v110l-170-75z"/><path class="side" d="m412 189 161-73v111l-161 72z"/><path class="window" d="m274 147 45 21v39l-45-20zM344 179l40 18v40l-40-18zM443 197l45-20v36l-45 20zM510 166l35-16v35l-35 16z"/></g><g class="model-building small"><path class="roof" d="m89 189 87-38 98 38-89 43z"/><path class="front" d="m89 189 96 43v61l-96-41z"/><path class="side" d="m185 232 89-43v61l-89 43z"/></g><g class="point-cloud"><circle cx="117" cy="246" r="2"/><circle cx="137" cy="218" r="2"/><circle cx="151" cy="260" r="2"/><circle cx="193" cy="250" r="2"/><circle cx="223" cy="220" r="2"/><circle cx="287" cy="145" r="2"/><circle cx="325" cy="126" r="2"/><circle cx="361" cy="112" r="2"/><circle cx="395" cy="170" r="2"/><circle cx="430" cy="241" r="2"/><circle cx="474" cy="152" r="2"/><circle cx="511" cy="132" r="2"/><circle cx="552" cy="162" r="2"/><circle cx="592" cy="225" r="2"/><circle cx="629" cy="247" r="2"/></g></svg><div class="viewer-hud"><span><i></i> EPSG:32643 · Georeferenced</span><span>LOD 2 · 1.8M faces</span></div><div class="orientation"><b>N</b><i></i></div></div>
+            <div class="viewer-footer"><span><i class="mesh-key"></i><b id="view-label">Textured mesh</b><small> · click Points to inspect reconstruction density</small></span><button id="focus-model" type="button">Focus model &#8594;</button></div>
+          </article>
+          <article class="panel validation-card" id="validation">
+            <div class="panel-heading compact"><div><p class="kicker">05 · Model assurance</p><h2>Validation evidence</h2></div><span class="status-chip pass-chip">Verified</span></div>
+            <div class="metric-highlight"><strong>0.24 <small>m</small></strong><span>median reprojection error</span></div>
+            <div class="validation-list"><div><span>Camera trajectory</span><i><b style="width:94%"></b></i><strong>94</strong></div><div><span>Scale consistency</span><i><b style="width:92%"></b></i><strong>92</strong></div><div><span>Texture completeness</span><i><b style="width:89%"></b></i><strong>89</strong></div><div><span>Geo alignment</span><i><b style="width:96%"></b></i><strong>96</strong></div></div>
+            <div class="issue-note"><b>Known limit</b><p>North facade is low-observation. It is flagged for review rather than represented as measured geometry.</p></div>
+          </article>
+        </section>
+        <section class="deliverable-panel" id="deliverables"><div><p class="kicker">Measured, inspectable outputs</p><h2>Ready for visualization, measurement, and analysis.</h2></div><div class="deliverable-list"><span><i>GLB</i>Textured model</span><span><i>LAS</i>Dense point cloud</span><span><i>GEO</i>GeoJSON footprint</span></div><button class="secondary-button" id="export-report" type="button">Export validation report</button></section>
       </section>
     </main>
-
-    <div class="toast" id="toast" role="status" aria-live="polite"><span>✓</span><p><strong id="toast-title">Mission created</strong><small id="toast-copy">Draft mission is ready to configure.</small></p></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"><span>&#10003;</span><p><strong id="toast-title">Ready</strong><small id="toast-copy">Your workspace has been updated.</small></p></div>
     <script src="app.js"></script>
   </body>
 </html>
