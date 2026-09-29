@@ -14,7 +14,7 @@ from fastapi.responses import JSONResponse
 
 from .config import Settings, get_settings
 from .logging_config import configure_logging
-from .routers import health
+from .routers import health, jobs
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -117,6 +117,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         )
 
     app.include_router(health.router)
+    app.include_router(jobs.router)
     return app
 
 

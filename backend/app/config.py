@@ -19,6 +19,12 @@ DEFAULT_CORS_ORIGINS = (
     "http://127.0.0.1:5173",
 )
 
+DEFAULT_UPLOAD_CHUNK_SIZE = 1024 * 1024
+DEFAULT_VIDEO_EXTENSIONS = frozenset({".mp4", ".mov", ".mkv", ".avi"})
+DEFAULT_GPS_EXTENSIONS = frozenset({".csv"})
+DEFAULT_IMU_EXTENSIONS = frozenset({".csv"})
+DEFAULT_METADATA_EXTENSIONS = frozenset({".json"})
+
 
 def _path_from_environment(name: str, default: Path, project_root: Path) -> Path:
     """Return an absolute path from an optional environment variable."""
@@ -37,6 +43,34 @@ def _cors_origins_from_environment() -> tuple[str, ...]:
     return tuple(origin.strip() for origin in raw_value.split(",") if origin.strip())
 
 
+def _upload_chunk_size_from_environment() -> int:
+    raw_value = os.getenv("UPLOAD_CHUNK_SIZE")
+    if not raw_value:
+        return DEFAULT_UPLOAD_CHUNK_SIZE
+    try:
+        chunk_size = int(raw_value)
+    except ValueError as exc:
+        raise ValueError("UPLOAD_CHUNK_SIZE must be a positive integer") from exc
+    if chunk_size <= 0:
+        raise ValueError("UPLOAD_CHUNK_SIZE must be a positive integer")
+    return chunk_size
+
+
+def _extensions_from_environment(name: str, default: frozenset[str]) -> frozenset[str]:
+    raw_value = os.getenv(name)
+    if not raw_value:
+        return default
+
+    extensions = frozenset(
+        extension if extension.startswith(".") else f".{extension}"
+        for extension in (value.strip().lower() for value in raw_value.split(","))
+        if extension and extension != "."
+    )
+    if not extensions:
+        raise ValueError(f"{name} must contain at least one extension")
+    return extensions
+
+
 @dataclass(frozen=True)
 class Settings:
     """Application settings derived from environment variables."""
@@ -47,6 +81,11 @@ class Settings:
     jobs_dir: Path
     cors_origins: tuple[str, ...]
     log_level: str
+    upload_chunk_size: int
+    allowed_video_extensions: frozenset[str]
+    allowed_gps_extensions: frozenset[str]
+    allowed_imu_extensions: frozenset[str]
+    allowed_metadata_extensions: frozenset[str]
 
     @property
     def raw_dir(self) -> Path:
@@ -69,6 +108,15 @@ class Settings:
             jobs_dir=_path_from_environment("JOBS_DIR", data_dir / "jobs", project_root),
             cors_origins=_cors_origins_from_environment(),
             log_level=os.getenv("LOG_LEVEL", "INFO").upper(),
+            upload_chunk_size=_upload_chunk_size_from_environment(),
+            allowed_video_extensions=_extensions_from_environment(
+                "ALLOWED_VIDEO_EXTENSIONS", DEFAULT_VIDEO_EXTENSIONS
+            ),
+            allowed_gps_extensions=_extensions_from_environment("ALLOWED_GPS_EXTENSIONS", DEFAULT_GPS_EXTENSIONS),
+            allowed_imu_extensions=_extensions_from_environment("ALLOWED_IMU_EXTENSIONS", DEFAULT_IMU_EXTENSIONS),
+            allowed_metadata_extensions=_extensions_from_environment(
+                "ALLOWED_METADATA_EXTENSIONS", DEFAULT_METADATA_EXTENSIONS
+            ),
         )
 
 
