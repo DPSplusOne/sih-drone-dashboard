@@ -1,0 +1,15 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Runtime assets are generated outside source control. Keep directory placeholders only.
+data/raw/*
+!data/raw/.gitkeep
+data/jobs/*
+!data/jobs/.gitkeep
+outputs/*
+!outputs/.gitkeep
+
+.env
