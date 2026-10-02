@@ -69,7 +69,7 @@ python -m http.server 5500
 
 Open `http://127.0.0.1:5500/`. The API allows this local-development origin through CORS.
 
-## Phase 2 job ingestion
+## Phase 2 job ingestion and preprocessing
 
 Open Swagger at `http://127.0.0.1:8000/docs`, expand `POST /api/jobs`, select **Try it out**, choose the required drone video and any optional files, then select **Execute**.
 
@@ -102,6 +102,25 @@ Example response:
 ```
 
 Each upload is stored under `data/jobs/<job_id>/`. The server keeps fixed input names (`video.<extension>`, `gps.csv`, `imu.csv`, and `metadata.json`) and records the sanitized original filenames, content types, byte counts, timestamps, status, and stage in `job.json`.
+
+Run the verified Member 1 frame-preprocessing stage after upload:
+
+```powershell
+curl.exe -X POST http://127.0.0.1:8000/api/jobs/<job_id>/preprocess
+```
+
+The response and `GET /api/jobs/<job_id>` include a `preprocessing` summary,
+including the quality report and job-relative artifact paths. The job moves from
+`uploaded`/`UPLOADED`, through `processing`/`PREPROCESSING`, to
+`ready`/`PREPROCESSED`. A failed or corrupt video is recorded as
+`failed`/`FAILED` with a diagnostic in `error`.
+
+Preprocessing always uses the verified settings: `sample_fps=2.0`,
+`blur_threshold=100.0`, `difference_threshold=12.0`, and
+`enable_stabilization=false`. Stabilized frames are never used for SfM
+keyframe selection. Outputs are kept below the job directory in `frames/`,
+`extracted/`, `stabilized/`, `keyframes/`, and `preprocessing/` (the four CSV
+and JSON reports).
 
 ## Frontend placement
 
