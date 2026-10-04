@@ -71,9 +71,24 @@ class StorageService:
 
         job_dir = self.jobs_dir / job_id
         job_dir.mkdir(parents=True, exist_ok=False)
-        for directory_name in ("input", "frames", "reconstruction", "outputs", "logs"):
+        for directory_name in (
+            "input",
+            "frames",
+            "extracted",
+            "stabilized",
+            "keyframes",
+            "preprocessing",
+            "reconstruction",
+            "outputs",
+            "logs",
+        ):
             (job_dir / directory_name).mkdir()
         return job_dir
+
+    def job_directory(self, job_id: str) -> Path:
+        """Return the fixed directory for a job whose record has already been loaded."""
+
+        return self.jobs_dir / job_id
 
     def delete_job_directory(self, job_id: str) -> None:
         """Remove a partially created UUID job directory after a failed upload."""
