@@ -122,6 +122,37 @@ keyframe selection. Outputs are kept below the job directory in `frames/`,
 `extracted/`, `stabilized/`, `keyframes/`, and `preprocessing/` (the four CSV
 and JSON reports).
 
+### FFmpeg preprocessing decoder
+
+Preprocessing defaults to `PREPROCESSING_DECODER=ffmpeg`. Install a local
+FFmpeg distribution that provides both `ffmpeg` and `ffprobe`, then make both
+commands available on `PATH`, or configure their locations without hard-coded
+platform paths:
+
+```powershell
+$env:FFMPEG_EXECUTABLE = "ffmpeg"
+$env:FFPROBE_EXECUTABLE = "ffprobe"
+```
+
+The service does not download or install FFmpeg. A missing executable produces
+a recorded preprocessing failure with an installation/configuration message.
+`ffprobe` supplies width, height, rational FPS, duration, frame count, and
+codec when the container exposes them; unavailable values remain `null` rather
+than being invented. FFmpeg extracts ordered candidates at `sample_fps`, then
+OpenCV performs the existing Laplacian blur scoring and global frame-difference
+keyframe selection.
+
+For old-vs-new decoder benchmarks, set `PREPROCESSING_DECODER=opencv`. The
+quality defaults can be configured as `SAMPLE_FPS=2.0`,
+`BLUR_THRESHOLD=100.0`, and `DIFFERENCE_THRESHOLD=12.0`; stabilization remains
+off by default (`ENABLE_STABILIZATION=false`) and is never used as the SfM
+input.
+Optional chunk extraction is disabled by default. Its settings are
+`PARALLEL_EXTRACTION=false`, `WORKERS=1`, `CHUNK_SECONDS=30`, and
+`CHUNK_OVERLAP_SECONDS=1`. When enabled, chunks only extract candidates; the
+server merges timestamp-ordered candidates, removes overlap duplicates, and
+makes the final keyframe decisions globally.
+
 ## Frontend placement
 
 `index.html`, `styles.css`, and `app.js` intentionally remain at the repository root in Phase 1. Moving them before API integration would create unnecessary path churn (including the current documentation link) without improving the visual experience. They will move together into `frontend/` when modular API, pipeline-state, and Three.js viewer code is introduced in a dedicated frontend-integration phase.

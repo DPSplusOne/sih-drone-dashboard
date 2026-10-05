@@ -29,6 +29,9 @@ def test_settings(tmp_path):
         allowed_gps_extensions=DEFAULT_GPS_EXTENSIONS,
         allowed_imu_extensions=DEFAULT_IMU_EXTENSIONS,
         allowed_metadata_extensions=DEFAULT_METADATA_EXTENSIONS,
+        # API lifecycle tests exercise the legacy decoder explicitly; FFmpeg
+        # behavior is isolated and subprocess-mocked in its own test module.
+        preprocessing_decoder="opencv",
     )
 
 

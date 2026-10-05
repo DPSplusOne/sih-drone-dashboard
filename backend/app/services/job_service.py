@@ -105,7 +105,7 @@ class JobService:
     def preprocess_job(self, job_id: str) -> JobRecord:
         """Run the Member 1 preprocessing stage for a persisted job."""
 
-        return PreprocessingService(self.storage).preprocess_job(job_id)
+        return PreprocessingService(self.storage, self.settings).preprocess_job(job_id)
 
 
 __all__ = ["JobNotFoundError", "JobService"]
