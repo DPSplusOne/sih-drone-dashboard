@@ -1,7 +1,7 @@
 """Job-level adapter for the verified Member 1 preprocessing module.
 
 The computer-vision implementation intentionally stays in ``member1_source``.
-This service only supplies the fixed project settings, manages job state, and
+This service supplies the project settings, manages job state, and
 places its artifacts in the durable job-directory layout.
 """
 
@@ -13,8 +13,9 @@ import shutil
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
+from ..config import Settings
 from ..models.job import (
     JobRecord,
     JobStage,
@@ -27,11 +28,6 @@ from .storage_service import JobNotFoundError, StorageService
 
 
 logger = logging.getLogger("aerotrace")
-
-SAMPLE_FPS = 2.0
-BLUR_THRESHOLD = 100.0
-DIFFERENCE_THRESHOLD = 12.0
-ENABLE_STABILIZATION = False
 
 REPORT_FILENAMES = (
     "video_metadata.json",
@@ -60,11 +56,12 @@ def _run_preprocessing(**kwargs: Any) -> dict[str, Any]:
 class PreprocessingService:
     """Runs Member 1 preprocessing and publishes its artifacts for one job."""
 
-    def __init__(self, storage: StorageService) -> None:
+    def __init__(self, storage: StorageService, settings: Settings) -> None:
         self.storage = storage
+        self.settings = settings
 
     def preprocess_job(self, job_id: str) -> JobRecord:
-        """Run preprocessing with fixed verified settings and persist its result."""
+        """Run preprocessing with configured settings and persist its result."""
 
         job = self.storage.load_job_record(job_id)
         if job.status is JobStatus.PROCESSING:
@@ -82,10 +79,17 @@ class PreprocessingService:
             result = _run_preprocessing(
                 video_path=video_path,
                 output_root=staging_dir,
-                sample_fps=SAMPLE_FPS,
-                blur_threshold=BLUR_THRESHOLD,
-                difference_threshold=DIFFERENCE_THRESHOLD,
-                enable_stabilization=ENABLE_STABILIZATION,
+                sample_fps=self.settings.sample_fps,
+                blur_threshold=self.settings.blur_threshold,
+                difference_threshold=self.settings.difference_threshold,
+                enable_stabilization=self.settings.enable_stabilization,
+                decoder=self.settings.preprocessing_decoder,
+                ffmpeg_executable=self.settings.ffmpeg_executable,
+                ffprobe_executable=self.settings.ffprobe_executable,
+                parallel_extraction=self.settings.parallel_extraction,
+                workers=self.settings.preprocessing_workers,
+                chunk_seconds=self.settings.chunk_seconds,
+                chunk_overlap_seconds=self.settings.chunk_overlap_seconds,
             )
             summary = self._publish_outputs(staging_dir, job_dir, result)
 
@@ -154,10 +158,10 @@ class PreprocessingService:
 
         return PreprocessingSummary(
             settings=PreprocessingSettings(
-                sample_fps=SAMPLE_FPS,
-                blur_threshold=BLUR_THRESHOLD,
-                difference_threshold=DIFFERENCE_THRESHOLD,
-                enable_stabilization=ENABLE_STABILIZATION,
+                sample_fps=self.settings.sample_fps,
+                blur_threshold=self.settings.blur_threshold,
+                difference_threshold=self.settings.difference_threshold,
+                enable_stabilization=self.settings.enable_stabilization,
             ),
             video_metadata=video_metadata,
             quality_report=quality_report,

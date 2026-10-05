@@ -24,6 +24,13 @@ DEFAULT_VIDEO_EXTENSIONS = frozenset({".mp4", ".mov", ".mkv", ".avi"})
 DEFAULT_GPS_EXTENSIONS = frozenset({".csv"})
 DEFAULT_IMU_EXTENSIONS = frozenset({".csv"})
 DEFAULT_METADATA_EXTENSIONS = frozenset({".json"})
+DEFAULT_PREPROCESSING_DECODER = "ffmpeg"
+DEFAULT_SAMPLE_FPS = 2.0
+DEFAULT_BLUR_THRESHOLD = 100.0
+DEFAULT_DIFFERENCE_THRESHOLD = 12.0
+DEFAULT_PREPROCESSING_WORKERS = 1
+DEFAULT_CHUNK_SECONDS = 30.0
+DEFAULT_CHUNK_OVERLAP_SECONDS = 1.0
 
 
 def _path_from_environment(name: str, default: Path, project_root: Path) -> Path:
@@ -71,6 +78,51 @@ def _extensions_from_environment(name: str, default: frozenset[str]) -> frozense
     return extensions
 
 
+def _boolean_from_environment(name: str, default: bool) -> bool:
+    raw_value = os.getenv(name)
+    if raw_value is None:
+        return default
+    normalized = raw_value.strip().lower()
+    if normalized in {"1", "true", "yes", "on"}:
+        return True
+    if normalized in {"0", "false", "no", "off"}:
+        return False
+    raise ValueError(f"{name} must be a boolean")
+
+
+def _positive_int_from_environment(name: str, default: int) -> int:
+    raw_value = os.getenv(name)
+    if not raw_value:
+        return default
+    try:
+        value = int(raw_value)
+    except ValueError as exc:
+        raise ValueError(f"{name} must be a positive integer") from exc
+    if value <= 0:
+        raise ValueError(f"{name} must be a positive integer")
+    return value
+
+
+def _positive_float_from_environment(name: str, default: float, *, allow_zero: bool = False) -> float:
+    raw_value = os.getenv(name)
+    if not raw_value:
+        return default
+    try:
+        value = float(raw_value)
+    except ValueError as exc:
+        raise ValueError(f"{name} must be a {'non-negative' if allow_zero else 'positive'} number") from exc
+    if value < 0 or (value == 0 and not allow_zero):
+        raise ValueError(f"{name} must be a {'non-negative' if allow_zero else 'positive'} number")
+    return value
+
+
+def _decoder_from_environment() -> str:
+    decoder = os.getenv("PREPROCESSING_DECODER", DEFAULT_PREPROCESSING_DECODER).strip().lower()
+    if decoder not in {"ffmpeg", "opencv"}:
+        raise ValueError("PREPROCESSING_DECODER must be either 'ffmpeg' or 'opencv'")
+    return decoder
+
+
 @dataclass(frozen=True)
 class Settings:
     """Application settings derived from environment variables."""
@@ -86,6 +138,17 @@ class Settings:
     allowed_gps_extensions: frozenset[str]
     allowed_imu_extensions: frozenset[str]
     allowed_metadata_extensions: frozenset[str]
+    ffmpeg_executable: str = "ffmpeg"
+    ffprobe_executable: str = "ffprobe"
+    preprocessing_decoder: str = DEFAULT_PREPROCESSING_DECODER
+    sample_fps: float = DEFAULT_SAMPLE_FPS
+    blur_threshold: float = DEFAULT_BLUR_THRESHOLD
+    difference_threshold: float = DEFAULT_DIFFERENCE_THRESHOLD
+    enable_stabilization: bool = False
+    parallel_extraction: bool = False
+    preprocessing_workers: int = DEFAULT_PREPROCESSING_WORKERS
+    chunk_seconds: float = DEFAULT_CHUNK_SECONDS
+    chunk_overlap_seconds: float = DEFAULT_CHUNK_OVERLAP_SECONDS
 
     @property
     def raw_dir(self) -> Path:
@@ -116,6 +179,23 @@ class Settings:
             allowed_imu_extensions=_extensions_from_environment("ALLOWED_IMU_EXTENSIONS", DEFAULT_IMU_EXTENSIONS),
             allowed_metadata_extensions=_extensions_from_environment(
                 "ALLOWED_METADATA_EXTENSIONS", DEFAULT_METADATA_EXTENSIONS
+            ),
+            ffmpeg_executable=os.getenv("FFMPEG_EXECUTABLE", "ffmpeg"),
+            ffprobe_executable=os.getenv("FFPROBE_EXECUTABLE", "ffprobe"),
+            preprocessing_decoder=_decoder_from_environment(),
+            sample_fps=_positive_float_from_environment("SAMPLE_FPS", DEFAULT_SAMPLE_FPS),
+            blur_threshold=_positive_float_from_environment(
+                "BLUR_THRESHOLD", DEFAULT_BLUR_THRESHOLD, allow_zero=True
+            ),
+            difference_threshold=_positive_float_from_environment(
+                "DIFFERENCE_THRESHOLD", DEFAULT_DIFFERENCE_THRESHOLD, allow_zero=True
+            ),
+            enable_stabilization=_boolean_from_environment("ENABLE_STABILIZATION", False),
+            parallel_extraction=_boolean_from_environment("PARALLEL_EXTRACTION", False),
+            preprocessing_workers=_positive_int_from_environment("WORKERS", DEFAULT_PREPROCESSING_WORKERS),
+            chunk_seconds=_positive_float_from_environment("CHUNK_SECONDS", DEFAULT_CHUNK_SECONDS),
+            chunk_overlap_seconds=_positive_float_from_environment(
+                "CHUNK_OVERLAP_SECONDS", DEFAULT_CHUNK_OVERLAP_SECONDS, allow_zero=True
             ),
         )
 
