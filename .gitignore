@@ -13,3 +13,12 @@ outputs/*
 !outputs/.gitkeep
 
 .env
+
+# AeroTrace local/private scratch log
+TEAM_LOGBOOK.local.md
+*.local.logbook.md
+
+# Local environment secrets
+.env
+.env.*
+!.env.example

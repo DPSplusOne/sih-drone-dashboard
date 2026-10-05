@@ -18,6 +18,7 @@ result = run_preprocessing(
     blur_threshold=100.0,
     difference_threshold=12.0,
     enable_stabilization=False,
+    decoder="ffmpeg",
 )
 ```
 
@@ -50,9 +51,11 @@ the original extracted images used to select SfM keyframes.
 - Python 3
 - `opencv-python` (`cv2`)
 - `numpy`
+- A local FFmpeg installation providing `ffmpeg` and `ffprobe` on `PATH`
+  (or configured with `FFMPEG_EXECUTABLE` and `FFPROBE_EXECUTABLE`)
 
 The CSV, JSON, pathlib, and shutil functionality uses the Python standard
-library.
+library. FFmpeg is a local prerequisite and is never installed by the service.
 
 ## Current Experimental Settings
 
@@ -61,9 +64,14 @@ library.
 - `difference_threshold = 12.0`
 - `enable_stabilization = False`
 
-The implementation retains OpenCV `VideoCapture` inspection, temporal frame
-sampling, Variance of Laplacian blur scoring, the existing stabilization
-experiment, and `cv2.absdiff` plus `np.mean` keyframe comparison.
+The default decoder uses ffprobe for metadata and FFmpeg for temporal candidate
+extraction. Rational FPS values are parsed exactly as floating-point ratios;
+metadata unavailable from ffprobe is written as `null`, not guessed. Candidate
+source-frame indices are derived from the emitted sampling timestamp and known
+source FPS when available. OpenCV remains responsible for Variance of Laplacian
+blur scoring, the optional stabilization experiment, and `cv2.absdiff` plus
+`np.mean` global keyframe comparison. Set `decoder="opencv"` for the legacy
+decoder/sampler benchmark path.
 
 ## Verified Result
 

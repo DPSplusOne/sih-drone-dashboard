@@ -69,7 +69,7 @@ python -m http.server 5500
 
 Open `http://127.0.0.1:5500/`. The API allows this local-development origin through CORS.
 
-## Phase 2 job ingestion
+## Phase 2 job ingestion and preprocessing
 
 Open Swagger at `http://127.0.0.1:8000/docs`, expand `POST /api/jobs`, select **Try it out**, choose the required drone video and any optional files, then select **Execute**.
 
@@ -102,6 +102,56 @@ Example response:
 ```
 
 Each upload is stored under `data/jobs/<job_id>/`. The server keeps fixed input names (`video.<extension>`, `gps.csv`, `imu.csv`, and `metadata.json`) and records the sanitized original filenames, content types, byte counts, timestamps, status, and stage in `job.json`.
+
+Run the verified Member 1 frame-preprocessing stage after upload:
+
+```powershell
+curl.exe -X POST http://127.0.0.1:8000/api/jobs/<job_id>/preprocess
+```
+
+The response and `GET /api/jobs/<job_id>` include a `preprocessing` summary,
+including the quality report and job-relative artifact paths. The job moves from
+`uploaded`/`UPLOADED`, through `processing`/`PREPROCESSING`, to
+`ready`/`PREPROCESSED`. A failed or corrupt video is recorded as
+`failed`/`FAILED` with a diagnostic in `error`.
+
+Preprocessing always uses the verified settings: `sample_fps=2.0`,
+`blur_threshold=100.0`, `difference_threshold=12.0`, and
+`enable_stabilization=false`. Stabilized frames are never used for SfM
+keyframe selection. Outputs are kept below the job directory in `frames/`,
+`extracted/`, `stabilized/`, `keyframes/`, and `preprocessing/` (the four CSV
+and JSON reports).
+
+### FFmpeg preprocessing decoder
+
+Preprocessing defaults to `PREPROCESSING_DECODER=ffmpeg`. Install a local
+FFmpeg distribution that provides both `ffmpeg` and `ffprobe`, then make both
+commands available on `PATH`, or configure their locations without hard-coded
+platform paths:
+
+```powershell
+$env:FFMPEG_EXECUTABLE = "ffmpeg"
+$env:FFPROBE_EXECUTABLE = "ffprobe"
+```
+
+The service does not download or install FFmpeg. A missing executable produces
+a recorded preprocessing failure with an installation/configuration message.
+`ffprobe` supplies width, height, rational FPS, duration, frame count, and
+codec when the container exposes them; unavailable values remain `null` rather
+than being invented. FFmpeg extracts ordered candidates at `sample_fps`, then
+OpenCV performs the existing Laplacian blur scoring and global frame-difference
+keyframe selection.
+
+For old-vs-new decoder benchmarks, set `PREPROCESSING_DECODER=opencv`. The
+quality defaults can be configured as `SAMPLE_FPS=2.0`,
+`BLUR_THRESHOLD=100.0`, and `DIFFERENCE_THRESHOLD=12.0`; stabilization remains
+off by default (`ENABLE_STABILIZATION=false`) and is never used as the SfM
+input.
+Optional chunk extraction is disabled by default. Its settings are
+`PARALLEL_EXTRACTION=false`, `WORKERS=1`, `CHUNK_SECONDS=30`, and
+`CHUNK_OVERLAP_SECONDS=1`. When enabled, chunks only extract candidates; the
+server merges timestamp-ordered candidates, removes overlap duplicates, and
+makes the final keyframe decisions globally.
 
 ## Frontend placement
 

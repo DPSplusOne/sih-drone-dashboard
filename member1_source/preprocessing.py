@@ -2,9 +2,12 @@ from pathlib import Path
 import csv
 import json
 import shutil
+import time
 
 import cv2
 import numpy as np
+
+from member1_source.video_io import extract_frames_ffmpeg, inspect_video_ffprobe
 
 
 IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png")
@@ -641,10 +644,25 @@ def run_preprocessing(
     sample_fps=2.0,
     blur_threshold=100.0,
     difference_threshold=12.0,
-    enable_stabilization=False
+    enable_stabilization=False,
+    decoder="ffmpeg",
+    ffmpeg_executable="ffmpeg",
+    ffprobe_executable="ffprobe",
+    parallel_extraction=False,
+    workers=1,
+    chunk_seconds=30.0,
+    chunk_overlap_seconds=1.0,
 ):
     video_path = Path(video_path)
     output_root = Path(output_root)
+    started_at = time.perf_counter()
+
+    if decoder not in {"ffmpeg", "opencv"}:
+        raise ValueError("decoder must be either 'ffmpeg' or 'opencv'.")
+    if enable_stabilization:
+        # Stabilization remains intentionally opt-in and never changes the SfM
+        # input path.  The API configuration keeps it disabled by default.
+        enable_stabilization = bool(enable_stabilization)
 
     output_root.mkdir(
         parents=True,
@@ -685,9 +703,10 @@ def run_preprocessing(
     # 1. VIDEO METADATA
     # --------------------------------------------------------
 
-    video_metadata = (
-        inspect_video(video_path)
-    )
+    if decoder == "ffmpeg":
+        video_metadata = inspect_video_ffprobe(video_path, ffprobe_executable)
+    else:
+        video_metadata = inspect_video(video_path)
 
     video_metadata_path = (
         output_root /
@@ -709,11 +728,24 @@ def run_preprocessing(
     # 2. FRAME EXTRACTION
     # --------------------------------------------------------
 
-    frame_records = extract_frames(
-        video_path,
-        extracted_folder,
-        sample_fps
-    )
+    if decoder == "ffmpeg":
+        frame_records = extract_frames_ffmpeg(
+            video_path,
+            extracted_folder,
+            video_metadata,
+            sample_fps,
+            ffmpeg_executable,
+            parallel_extraction=parallel_extraction,
+            workers=workers,
+            chunk_seconds=chunk_seconds,
+            chunk_overlap_seconds=chunk_overlap_seconds,
+        )
+    else:
+        frame_records = extract_frames(
+            video_path,
+            extracted_folder,
+            sample_fps
+        )
 
     # --------------------------------------------------------
     # 3. BLUR ANALYSIS
@@ -854,6 +886,13 @@ def run_preprocessing(
                 difference_score
         }
 
+        # These fields are additive diagnostic metadata.  The manifest keeps
+        # the established downstream handoff columns unchanged.
+        if "chunk_id" in record:
+            frame_row["chunk_id"] = record["chunk_id"]
+        if "decoder" in record:
+            frame_row["decoder"] = record["decoder"]
+
         frame_metadata_rows.append(
             frame_row
         )
@@ -913,7 +952,9 @@ def run_preprocessing(
             "accepted",
             "state",
             "selected_keyframe",
-            "difference_score"
+            "difference_score",
+            "chunk_id",
+            "decoder",
         ]
     )
 
@@ -1035,7 +1076,19 @@ def run_preprocessing(
             blur_threshold,
 
         "difference_threshold":
-            difference_threshold
+            difference_threshold,
+
+        "decoder":
+            decoder,
+
+        "parallel_extraction":
+            parallel_extraction,
+
+        "worker_count":
+            workers if parallel_extraction else 1,
+
+        "runtime_seconds":
+            time.perf_counter() - started_at,
     }
 
     quality_report_path = (

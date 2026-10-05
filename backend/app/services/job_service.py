@@ -10,6 +10,7 @@ from fastapi import UploadFile
 
 from ..config import Settings
 from ..models.job import JobInputs, JobRecord
+from .preprocessing_service import PreprocessingService
 from .storage_service import JobNotFoundError, StorageService, ValidatedUpload
 
 
@@ -100,6 +101,11 @@ class JobService:
         """Return a persisted job after UUID normalization in the route layer."""
 
         return self.storage.load_job_record(job_id)
+
+    def preprocess_job(self, job_id: str) -> JobRecord:
+        """Run the Member 1 preprocessing stage for a persisted job."""
+
+        return PreprocessingService(self.storage, self.settings).preprocess_job(job_id)
 
 
 __all__ = ["JobNotFoundError", "JobService"]
